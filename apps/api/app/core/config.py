@@ -18,6 +18,10 @@ class Settings(BaseSettings):
 
     secret_key: str
     session_cookie_secure: bool = True
+    session_cookie_name: str = "opshub_session"
+    csrf_cookie_name: str = "opshub_csrf"
+    session_ttl_hours: int = 12
+    session_cookie_samesite: str = "lax"
 
     cors_origins: list[str] = ["http://localhost:5173"]
 
