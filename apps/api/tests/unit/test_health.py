@@ -22,11 +22,7 @@ def test_readiness_returns_200(monkeypatch):
     def override_get_db():
         yield FakeDatabase()
 
-    monkeypatch.setitem(
-        app.dependency_overrides,
-        get_db,
-        override_get_db,
-    )
+    monkeypatch.setitem(app.dependency_overrides, get_db, override_get_db)
 
     response = client.get("/health/ready")
 
@@ -34,7 +30,7 @@ def test_readiness_returns_200(monkeypatch):
     assert response.json() == {"status": "ok"}
 
 
-def test_readiness_returns_503_when_database_unavailable(monkeypatch):
+def test_readiness_returns_503(monkeypatch):
     class FakeDatabase:
         def execute(self, statement):
             raise OperationalError(
@@ -46,11 +42,7 @@ def test_readiness_returns_503_when_database_unavailable(monkeypatch):
     def override_get_db():
         yield FakeDatabase()
 
-    monkeypatch.setitem(
-        app.dependency_overrides,
-        get_db,
-        override_get_db,
-    )
+    monkeypatch.setitem(app.dependency_overrides, get_db, override_get_db)
 
     response = client.get("/health/ready")
 
