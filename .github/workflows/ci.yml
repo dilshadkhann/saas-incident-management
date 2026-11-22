@@ -51,6 +51,10 @@ jobs:
         working-directory: apps/api
         run: python -m pip install -e ".[dev]"
 
+      - name: Diagnose backend test environment
+        working-directory: apps/api
+        run: python -c "import fastapi, starlette, httpx2; from app.core.config import get_settings; s=get_settings(); print('FastAPI:', fastapi.__version__); print('Starlette:', starlette.__version__); print('httpx2:', httpx2.__version__); print('Secure cookies:', s.session_cookie_secure)"
+
       - name: Apply database migrations
         run: alembic -c apps/api/alembic.ini upgrade head
 
