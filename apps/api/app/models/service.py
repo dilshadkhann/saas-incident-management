@@ -2,14 +2,14 @@ from datetime import datetime
 from uuid import UUID, uuid4
 
 from sqlalchemy import (
-    Boolean,
+    CheckConstraint,
     DateTime,
     ForeignKey,
     String,
+    Text,
     UniqueConstraint,
     Uuid,
     func,
-    true,
 )
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -24,6 +24,16 @@ class Service(Base):
             "organization_id",
             "id",
             name="uq_services_organization_id_id",
+        ),
+        UniqueConstraint(
+            "organization_id",
+            "name",
+            name="uq_services_organization_id_name",
+        ),
+        CheckConstraint(
+            "status IN ('operational', 'degraded', 'partial_outage', "
+            "'major_outage', 'maintenance')",
+            name="valid_service_status",
         ),
     )
 
@@ -45,15 +55,15 @@ class Service(Base):
     )
 
     description: Mapped[str | None] = mapped_column(
-        String(1000),
+        Text,
         nullable=True,
     )
 
-    is_active: Mapped[bool] = mapped_column(
-        Boolean,
+    status: Mapped[str] = mapped_column(
+        String(30),
         nullable=False,
-        default=True,
-        server_default=true(),
+        default="operational",
+        server_default="operational",
     )
 
     created_at: Mapped[datetime] = mapped_column(
