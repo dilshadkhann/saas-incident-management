@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID, uuid4
 
-from sqlalchemy import DateTime, String, Uuid, func
+from sqlalchemy import DateTime, String, UniqueConstraint, Uuid, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db import Base
@@ -9,6 +9,8 @@ from app.db import Base
 
 class Organization(Base):
     __tablename__ = "organizations"
+
+    __table_args__ = (UniqueConstraint("slug", name="uq_organizations_slug"),)
 
     id: Mapped[UUID] = mapped_column(
         Uuid(as_uuid=True),
@@ -23,7 +25,6 @@ class Organization(Base):
 
     slug: Mapped[str] = mapped_column(
         String(100),
-        unique=True,
         nullable=False,
     )
 
