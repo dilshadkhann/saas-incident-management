@@ -128,7 +128,7 @@ def test_admin_can_create_and_list_services(
         )
     )
     assert audit is not None
-    assert audit.entity_id == created["id"]
+    assert str(audit.entity_id) == created["id"]
 
 
 def test_responder_can_create_and_update_service(
