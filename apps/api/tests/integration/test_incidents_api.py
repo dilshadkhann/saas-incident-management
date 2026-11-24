@@ -244,3 +244,51 @@ def test_incident_rejects_service_outside_organization(
         headers=csrf_headers(authenticated_user),
     )
     assert response.status_code == 422
+
+
+def test_audit_history_is_paginated_filtered_and_tenant_scoped(
+    client: TestClient,
+    authenticated_user: dict[str, str],
+    db_session: Session,
+):
+    organization_id, service = create_org_and_service(client, authenticated_user)
+    created = create_incident(client, authenticated_user, organization_id, service["id"])
+    url = f"/organizations/{organization_id}/audit-logs"
+
+    response = client.get(url)
+    assert response.status_code == 200, response.text
+    assert response.json()["total"] >= 2
+    assert response.json()["items"][0]["organization_id"] == organization_id
+
+    filtered = client.get(url, params={"action": "incident.created"})
+    assert filtered.status_code == 200
+    assert filtered.json()["total"] == 1
+    assert filtered.json()["items"][0]["entity_id"] == created["id"]
+
+    page = client.get(url, params={"limit": 1})
+    assert page.status_code == 200
+    assert len(page.json()["items"]) == 1
+
+    membership = db_session.scalar(
+        select(Membership).where(
+            Membership.organization_id == organization_id,
+            Membership.user_id == authenticated_user["id"],
+        )
+    )
+    assert membership is not None
+    membership.role = "viewer"
+    db_session.flush()
+    assert client.get(url).status_code == 200
+
+    assert client.get(f"/organizations/{uuid4()}/audit-logs").status_code == 404
+    assert client.get(f"{url}?limit=101").status_code == 422
+    assert client.get(f"{url}?offset=-1").status_code == 422
+
+
+def test_audit_history_endpoint(client: TestClient, authenticated_user: dict[str, str]):
+    organization_id, service = create_org_and_service(client, authenticated_user)
+    create_incident(client, authenticated_user, organization_id, service["id"])
+    response = client.get(f"/organizations/{organization_id}/audit-logs")
+    assert response.status_code == 200, response.text
+    assert response.json()["total"] >= 2
+    assert client.get(f"/organizations/{uuid4()}/audit-logs").status_code == 404
