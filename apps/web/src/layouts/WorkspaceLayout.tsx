@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router'
 import { useAuth } from '../lib/use-auth'
 
@@ -19,6 +19,7 @@ function WorkspaceLayout() {
     { label: 'Dashboard', to: basePath, end: true },
     { label: 'Incidents', to: `${basePath}/incidents`, end: false },
     { label: 'Services', to: `${basePath}/services`, end: false },
+    { label: 'Audit History', to: `${basePath}/audit-logs`, end: false },
   ]
 
   async function handleLogout() {
@@ -97,7 +98,7 @@ function WorkspaceLayout() {
               disabled={loggingOut}
               className="mt-3 text-sm font-semibold text-red-600 hover:text-red-700 disabled:opacity-60"
             >
-              {loggingOut ? 'Signing out…' : 'Sign out'}
+              {loggingOut ? 'Signing outâ€¦' : 'Sign out'}
             </button>
           </div>
         </div>

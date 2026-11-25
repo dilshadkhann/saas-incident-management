@@ -1,5 +1,6 @@
-import type { ReactNode } from 'react'
+﻿import type { ReactNode } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router'
+import AuditHistoryPage from '../pages/AuditHistoryPage'
 import AdminDashboardPage from '../pages/admin/AdminDashboardPage'
 import IncidentsPage from '../pages/IncidentsPage'
 import LoginPage from '../pages/auth/LoginPage'
@@ -19,7 +20,7 @@ import { useAuth } from '../lib/use-auth'
 function LoadingMessage() {
   return (
     <div className="p-8 text-sm text-slate-500" role="status">
-      Loading workspace…
+      Loading workspaceâ€¦
     </div>
   )
 }
@@ -114,6 +115,14 @@ export function AppRoutes() {
             </RequireOrganization>
           }
         />
+        <Route
+          path="audit-logs"
+          element={
+            <RequireOrganization>
+              <AuditHistoryPage />
+            </RequireOrganization>
+          }
+        />
       </Route>
 
       <Route
@@ -127,6 +136,7 @@ export function AppRoutes() {
         <Route index element={<AdminDashboardPage />} />
         <Route path="incidents" element={<IncidentsPage />} />
         <Route path="services" element={<ServicesPage />} />
+        <Route path="audit-logs" element={<AuditHistoryPage />} />
       </Route>
 
       <Route
@@ -140,6 +150,7 @@ export function AppRoutes() {
         <Route index element={<ResponderDashboardPage />} />
         <Route path="incidents" element={<IncidentsPage />} />
         <Route path="services" element={<ServicesPage />} />
+        <Route path="audit-logs" element={<AuditHistoryPage />} />
       </Route>
 
       <Route
@@ -153,6 +164,7 @@ export function AppRoutes() {
         <Route index element={<ViewerDashboardPage />} />
         <Route path="incidents" element={<IncidentsPage />} />
         <Route path="services" element={<ServicesPage />} />
+        <Route path="audit-logs" element={<AuditHistoryPage />} />
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />
