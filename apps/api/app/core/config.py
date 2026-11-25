@@ -3,7 +3,11 @@ from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-PROJECT_ROOT = Path(__file__).resolve().parents[4]
+PROJECT_ROOT = (
+    Path(__file__).resolve().parents[4]
+    if len(Path(__file__).resolve().parents) > 4
+    else Path(__file__).resolve().parents[2]
+)
 
 
 class Settings(BaseSettings):

@@ -75,3 +75,4 @@ playwright-report/
 # Local Docker overrides
 # ==============================
 docker-compose.override.yml
+!.env.production.example
