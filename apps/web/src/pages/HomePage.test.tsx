@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import HomePage from "./HomePage";
 
 describe("HomePage", () => {
@@ -49,8 +49,8 @@ describe("HomePage", () => {
     const preview = screen.getByText("Workspace activity").closest(".home-preview-panel");
     expect(preview).not.toBeNull();
     const scoped = within(preview as HTMLElement);
-    scoped.getByRole("button", { name: "Services" }).click();
-    scoped.getByRole("button", { name: "Incidents" }).click();
+    fireEvent.click(scoped.getByRole("button", { name: "Services" }));
+    fireEvent.click(scoped.getByRole("button", { name: "Incidents" }));
     expect(scoped.getByText("Payment latency")).toBeInTheDocument();
   });
 });

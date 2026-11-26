@@ -81,7 +81,7 @@ afterEach(() => {
 describe('AppRouter', () => {
   it('renders the home page', () => {
     renderRoute('/')
-    expect(screen.getByRole('heading', { name: 'OpsHub' })).toBeInTheDocument()
+    expect(screen.getAllByRole('link', { name: 'OpsHub home' }).length).toBeGreaterThan(0)
   })
   it('renders the login page', () => {
     renderRoute('/login')
