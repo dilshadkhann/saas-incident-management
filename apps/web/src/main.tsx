@@ -1,4 +1,4 @@
-import "./opshub-design-system.css";
+import './opshub-design-system.css'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
