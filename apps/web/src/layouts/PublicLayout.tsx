@@ -16,9 +16,15 @@ function PublicLayout() {
           </Link>
 
           <div className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
-            <a href="/#platform" className="transition hover:text-slate-950">Platform</a>
-            <a href="/#workflow" className="transition hover:text-slate-950">How it works</a>
-            <a href="/#security" className="transition hover:text-slate-950">Security</a>
+            <a href="/#platform" className="transition hover:text-slate-950">
+              Platform
+            </a>
+            <a href="/#workflow" className="transition hover:text-slate-950">
+              How it works
+            </a>
+            <a href="/#security" className="transition hover:text-slate-950">
+              Security
+            </a>
           </div>
 
           <div className="flex items-center gap-3">
@@ -32,7 +38,10 @@ function PublicLayout() {
               to="/register"
               className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700"
             >
-              Get started <span aria-hidden="true" className="ml-2">→</span>
+              Get started{' '}
+              <span aria-hidden="true" className="ml-2">
+                →
+              </span>
             </Link>
           </div>
         </nav>

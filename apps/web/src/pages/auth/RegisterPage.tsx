@@ -93,13 +93,14 @@ function RegisterPage() {
               onChange={(event) => setPassword(event.target.value)}
               className="auth-input w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100"
             />
-            <p className="mt-1.5 text-xs text-slate-400">
-              Use at least 12 characters.
-            </p>
+            <p className="mt-1.5 text-xs text-slate-400">Use at least 12 characters.</p>
           </div>
 
           {error && (
-            <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-3.5 text-sm text-red-700">
+            <p
+              role="alert"
+              className="rounded-xl border border-red-200 bg-red-50 p-3.5 text-sm text-red-700"
+            >
               {error}
             </p>
           )}
@@ -110,7 +111,11 @@ function RegisterPage() {
             className="auth-submit mt-2 w-full rounded-xl bg-indigo-600 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/15 transition hover:-translate-y-0.5 hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {submitting ? 'Creating account...' : 'Create your account'}
-            {!submitting && <span aria-hidden="true" className="ml-2">→</span>}
+            {!submitting && (
+              <span aria-hidden="true" className="ml-2">
+                →
+              </span>
+            )}
           </button>
         </form>
 
@@ -122,7 +127,10 @@ function RegisterPage() {
 
         <p className="text-center text-sm text-slate-600">
           Already registered?{' '}
-          <Link className="font-semibold text-indigo-600 transition hover:text-indigo-700" to="/login">
+          <Link
+            className="font-semibold text-indigo-600 transition hover:text-indigo-700"
+            to="/login"
+          >
             Sign in
           </Link>
         </p>

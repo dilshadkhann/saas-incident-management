@@ -7,9 +7,27 @@ type AuthExperienceProps = {
 }
 
 const activity = [
-  { time: '10:42:08', title: 'Incident detected', detail: 'Payment API latency elevated', status: 'Detected', tone: 'auth-dot-red' },
-  { time: '10:44:21', title: 'Investigation started', detail: 'Responder assigned to incident', status: 'Investigating', tone: 'auth-dot-amber' },
-  { time: '10:51:36', title: 'Service stabilized', detail: 'Response time returning to normal', status: 'Monitoring', tone: 'auth-dot-green' },
+  {
+    time: '10:42:08',
+    title: 'Incident detected',
+    detail: 'Payment API latency elevated',
+    status: 'Detected',
+    tone: 'auth-dot-red',
+  },
+  {
+    time: '10:44:21',
+    title: 'Investigation started',
+    detail: 'Responder assigned to incident',
+    status: 'Investigating',
+    tone: 'auth-dot-amber',
+  },
+  {
+    time: '10:51:36',
+    title: 'Service stabilized',
+    detail: 'Response time returning to normal',
+    status: 'Monitoring',
+    tone: 'auth-dot-green',
+  },
 ]
 
 function AuthExperience({ children, variant }: AuthExperienceProps) {
@@ -36,9 +54,17 @@ function AuthExperience({ children, variant }: AuthExperienceProps) {
 
             <h1>
               {isLogin ? (
-                <>Good to have<br />you <span>back.</span></>
+                <>
+                  Good to have
+                  <br />
+                  you <span>back.</span>
+                </>
               ) : (
-                <>Make every<br />response <span>count.</span></>
+                <>
+                  Make every
+                  <br />
+                  response <span>count.</span>
+                </>
               )}
             </h1>
 
@@ -80,8 +106,8 @@ function AuthExperience({ children, variant }: AuthExperienceProps) {
             </div>
 
             <div className="auth-activity-footer">
-              <span className="auth-footer-check">✓</span>
-              A clear record from detection to resolution
+              <span className="auth-footer-check">✓</span>A clear record from detection to
+              resolution
             </div>
           </div>
 
@@ -100,9 +126,7 @@ function AuthExperience({ children, variant }: AuthExperienceProps) {
           </Link>
         </div>
 
-        <div className="auth-form-content">
-          {children}
-        </div>
+        <div className="auth-form-content">{children}</div>
 
         <p className="auth-form-footer">
           <span>© {new Date().getFullYear()} OpsHub</span>
