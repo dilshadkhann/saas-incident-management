@@ -43,7 +43,10 @@ function LoginPage() {
           </p>
 
           {registered && (
-            <p className="mt-5 rounded-xl border border-green-200 bg-green-50 p-3.5 text-sm text-green-700" role="status">
+            <p
+              className="mt-5 rounded-xl border border-green-200 bg-green-50 p-3.5 text-sm text-green-700"
+              role="status"
+            >
               Account created successfully. You can now sign in.
             </p>
           )}
@@ -85,7 +88,10 @@ function LoginPage() {
           </div>
 
           {error && (
-            <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-3.5 text-sm text-red-700">
+            <p
+              role="alert"
+              className="rounded-xl border border-red-200 bg-red-50 p-3.5 text-sm text-red-700"
+            >
               {error}
             </p>
           )}
@@ -96,7 +102,11 @@ function LoginPage() {
             className="auth-submit w-full rounded-xl bg-indigo-600 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/15 transition hover:-translate-y-0.5 hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {submitting ? 'Signing in...' : 'Sign in to OpsHub'}
-            {!submitting && <span aria-hidden="true" className="ml-2">→</span>}
+            {!submitting && (
+              <span aria-hidden="true" className="ml-2">
+                →
+              </span>
+            )}
           </button>
         </form>
 
@@ -108,7 +118,10 @@ function LoginPage() {
 
         <p className="text-center text-sm text-slate-600">
           Don&apos;t have an account?{' '}
-          <Link className="font-semibold text-indigo-600 transition hover:text-indigo-700" to="/register">
+          <Link
+            className="font-semibold text-indigo-600 transition hover:text-indigo-700"
+            to="/register"
+          >
             Create an account
           </Link>
         </p>
