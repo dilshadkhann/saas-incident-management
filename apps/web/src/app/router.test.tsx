@@ -24,7 +24,7 @@ function jsonResponse(data: unknown, status = 200) {
     json: async () => data,
   } as Response
 }
-function mockApi(role: TestRole = null, hasOrganization = true) {
+function mockApi(role: TestRole = null, hasOrganization = true, services: unknown[] = []) {
   vi.stubGlobal(
     'fetch',
     vi.fn(async (input: RequestInfo | URL) => {
@@ -50,15 +50,22 @@ function mockApi(role: TestRole = null, hasOrganization = true) {
             : [],
         )
       }
-      if (url.includes('/incidents') || url.includes('/services')) {
-        return jsonResponse([])
+      if (url.includes('/audit-logs')) {
+        return jsonResponse({ items: [], total: 0, limit: 8, offset: 0 })
       }
+      if (url.includes('/services')) return jsonResponse(services)
+      if (url.includes('/incidents')) return jsonResponse([])
       return jsonResponse({})
     }),
   )
 }
-function renderRoute(path: string, role: TestRole = null, hasOrganization = true) {
-  mockApi(role, hasOrganization)
+function renderRoute(
+  path: string,
+  role: TestRole = null,
+  hasOrganization = true,
+  services: unknown[] = [],
+) {
+  mockApi(role, hasOrganization, services)
   return render(
     <MemoryRouter initialEntries={[path]}>
       <AuthProvider>
@@ -74,7 +81,7 @@ afterEach(() => {
 describe('AppRouter', () => {
   it('renders the home page', () => {
     renderRoute('/')
-    expect(screen.getByRole('heading', { name: 'OpsHub' })).toBeInTheDocument()
+    expect(screen.getAllByRole('link', { name: 'OpsHub home' }).length).toBeGreaterThan(0)
   })
   it('renders the login page', () => {
     renderRoute('/login')
@@ -84,14 +91,52 @@ describe('AppRouter', () => {
     renderRoute('/register')
     expect(screen.getByRole('heading', { name: 'Create your account' })).toBeInTheDocument()
   })
-  it.each([
-    ['admin', 'Admin Dashboard'],
-    ['responder', 'Responder Dashboard'],
-    ['viewer', 'Viewer Dashboard'],
-  ] as const)('renders the %s dashboard', async (role, heading) => {
+  it.each(['admin', 'responder', 'viewer'] as const)('renders the %s dashboard', async (role) => {
     renderRoute(`/${role}`, role)
-    expect(await screen.findByRole('heading', { name: heading })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Nothing to monitor yet' }),
+    ).toBeInTheDocument()
   })
+  it.each([
+    ['admin', true],
+    ['responder', true],
+    ['viewer', false],
+  ] as const)(
+    'offers the first-service action on an empty %s dashboard: %s',
+    async (role, canAdd) => {
+      renderRoute(`/${role}`, role)
+      await screen.findByRole('heading', { level: 1, name: 'Nothing to monitor yet' })
+      // One action only, and no way to report an incident when there is nothing to report against.
+      expect(screen.queryAllByRole('link', { name: 'Add a service' })).toHaveLength(canAdd ? 1 : 0)
+      expect(screen.queryByRole('link', { name: 'Report an incident' })).not.toBeInTheDocument()
+    },
+  )
+
+  it.each([
+    ['admin', true],
+    ['responder', true],
+    ['viewer', false],
+  ] as const)(
+    'shows report actions on a %s dashboard that has services: %s',
+    async (role, canReport) => {
+      renderRoute(`/${role}`, role, true, [
+        {
+          id: 'svc-1',
+          organization_id: 'org-1',
+          name: 'Public API',
+          description: null,
+          status: 'operational',
+          created_at: '2026-01-01T00:00:00Z',
+          updated_at: '2026-01-01T00:00:00Z',
+        },
+      ])
+      await screen.findByRole('heading', { level: 1, name: 'All systems operational' })
+      const report = screen.queryByRole('link', { name: 'Report an incident' })
+      if (canReport) expect(report).toBeInTheDocument()
+      else expect(report).not.toBeInTheDocument()
+    },
+  )
+
   it.each(['admin', 'responder', 'viewer'] as const)(
     'renders the incidents page for %s',
     async (role) => {
@@ -118,7 +163,10 @@ describe('AppRouter', () => {
   })
   it('redirects a viewer away from the admin dashboard', async () => {
     renderRoute('/admin', 'viewer')
-    expect(await screen.findByRole('heading', { name: 'Viewer Dashboard' })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Nothing to monitor yet' }),
+    ).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Report an incident' })).not.toBeInTheDocument()
   })
   it('renders the not found page for an unknown route', () => {
     renderRoute('/unknown-route')

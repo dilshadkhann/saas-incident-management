@@ -1,16 +1,14 @@
-﻿import type { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router'
 import AuditHistoryPage from '../pages/AuditHistoryPage'
-import AdminDashboardPage from '../pages/admin/AdminDashboardPage'
+import DashboardPage from '../pages/DashboardPage'
 import IncidentsPage from '../pages/IncidentsPage'
 import LoginPage from '../pages/auth/LoginPage'
 import RegisterPage from '../pages/auth/RegisterPage'
 import HomePage from '../pages/HomePage'
 import NotFoundPage from '../pages/NotFoundPage'
 import OrganizationSetupPage from '../pages/OrganizationSetupPage'
-import ResponderDashboardPage from '../pages/responder/ResponderDashboardPage'
 import ServicesPage from '../pages/ServicesPage'
-import ViewerDashboardPage from '../pages/viewer/ViewerDashboardPage'
 import PublicLayout from '../layouts/PublicLayout'
 import WorkspaceLayout from '../layouts/WorkspaceLayout'
 import { AuthProvider } from '../lib/auth-provider'
@@ -20,7 +18,7 @@ import { useAuth } from '../lib/use-auth'
 function LoadingMessage() {
   return (
     <div className="p-8 text-sm text-slate-500" role="status">
-      Loading workspaceâ€¦
+      Loading workspace…
     </div>
   )
 }
@@ -133,7 +131,7 @@ export function AppRoutes() {
           </RequireRole>
         }
       >
-        <Route index element={<AdminDashboardPage />} />
+        <Route index element={<DashboardPage />} />
         <Route path="incidents" element={<IncidentsPage />} />
         <Route path="services" element={<ServicesPage />} />
         <Route path="audit-logs" element={<AuditHistoryPage />} />
@@ -147,7 +145,7 @@ export function AppRoutes() {
           </RequireRole>
         }
       >
-        <Route index element={<ResponderDashboardPage />} />
+        <Route index element={<DashboardPage />} />
         <Route path="incidents" element={<IncidentsPage />} />
         <Route path="services" element={<ServicesPage />} />
         <Route path="audit-logs" element={<AuditHistoryPage />} />
@@ -161,7 +159,7 @@ export function AppRoutes() {
           </RequireRole>
         }
       >
-        <Route index element={<ViewerDashboardPage />} />
+        <Route index element={<DashboardPage />} />
         <Route path="incidents" element={<IncidentsPage />} />
         <Route path="services" element={<ServicesPage />} />
         <Route path="audit-logs" element={<AuditHistoryPage />} />

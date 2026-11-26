@@ -76,3 +76,5 @@ playwright-report/
 # ==============================
 docker-compose.override.yml
 !.env.production.example
+
+.env.production

@@ -19,13 +19,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const organizationIdRef = useRef('')
   const membershipRequestRef = useRef(0)
+  // Identifies the most recent refresh(). Refreshes can overlap (React StrictMode runs the mount
+  // effect twice, and login/organization creation can refresh while another is in flight). Only
+  // the latest one may write state; an older one stops quietly so it can never flip `loading`
+  // to false while the newest refresh is still waiting on the user's role.
+  const refreshRequestRef = useRef(0)
 
   const refresh = useCallback(async () => {
+    const refreshId = ++refreshRequestRef.current
+    const isStale = () => refreshId !== refreshRequestRef.current
+
     try {
       const currentUser = await apiRequest<User>('/auth/me')
+      if (isStale()) return
       setUser(currentUser)
 
       const orgs = await apiRequest<Organization[]>('/organizations')
+      if (isStale()) return
       setOrganizations(orgs)
 
       const selected = orgs.find((item) => item.id === organizationIdRef.current) ?? orgs[0] ?? null
@@ -37,6 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (selected) {
         const requestId = ++membershipRequestRef.current
         const members = await apiRequest<Membership[]>(`/organizations/${selected.id}/members`)
+        if (isStale()) return
 
         if (requestId === membershipRequestRef.current) {
           const membership = members.find((item) => item.user_id === currentUser.id)
@@ -47,6 +58,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setRole(null)
       }
     } catch (error) {
+      if (isStale()) return
+
       if (error instanceof ApiError && error.status === 401) {
         membershipRequestRef.current += 1
         organizationIdRef.current = ''
@@ -58,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw error
       }
     } finally {
-      setLoading(false)
+      if (!isStale()) setLoading(false)
     }
   }, [])
 
@@ -84,12 +97,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       await apiRequest<void>('/auth/logout', { method: 'POST' })
     } finally {
+      // Invalidate any refresh still in flight so it cannot restore the signed-out session.
+      refreshRequestRef.current += 1
       membershipRequestRef.current += 1
       organizationIdRef.current = ''
       setUser(null)
       setOrganizations([])
       setOrganizationId('')
       setRole(null)
+      setLoading(false)
     }
   }, [])
 
