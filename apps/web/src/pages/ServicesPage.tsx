@@ -156,7 +156,7 @@ function ServicesPage() {
             disabled={saving || !name.trim()}
             className="mt-4 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
           >
-            {saving ? 'Creatingâ€¦' : 'Create service'}
+            {saving ? 'Creating…' : 'Create service'}
           </button>
         </form>
       )}
@@ -173,7 +173,7 @@ function ServicesPage() {
         </div>
         {loading ? (
           <p role="status" className="p-6 text-sm text-slate-500">
-            Loading servicesâ€¦
+            Loading services…
           </p>
         ) : services.length === 0 ? (
           <p className="p-6 text-sm text-slate-500">

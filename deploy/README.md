@@ -1,4 +1,4 @@
-﻿# OpsHub Production Deployment
+# OpsHub Production Deployment
 
 ## Requirements
 - Docker Engine and Docker Compose v2

@@ -1,4 +1,4 @@
-﻿import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { apiRequest } from '../lib/api-client'
 import { useAuth } from '../lib/use-auth'
 

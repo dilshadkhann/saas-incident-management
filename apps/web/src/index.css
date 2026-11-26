@@ -1,11 +1,116 @@
 @import 'tailwindcss';
+@import '@fontsource-variable/instrument-sans/wdth.css';
+
+/*
+  OpsHub design tokens.
+
+  Principle: color is reserved for meaning. Surfaces and text are a quiet mineral-grey scale, and
+  saturated color appears only for service status, incident severity, and interactive affordances,
+  so anything colored on screen is asking for attention.
+
+  The `slate` and `indigo` scales are redefined here so every existing page that uses those
+  Tailwind utilities adopts the system without per-page edits.
+*/
+@theme {
+  --font-sans:
+    'Instrument Sans Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Neutrals: cool mineral grey with a faint green cast. 100 is the page, 900 is ink. */
+  --color-slate-50: #f7f9f7;
+  --color-slate-100: #eef2ef;
+  --color-slate-200: #dde4df;
+  --color-slate-300: #c3cdc7;
+  --color-slate-400: #8e9b94;
+  --color-slate-500: #5c6a63;
+  --color-slate-600: #4b5852;
+  --color-slate-700: #36413c;
+  --color-slate-800: #232c28;
+  --color-slate-900: #161d1a;
+  --color-slate-950: #0c110f;
+
+  /* Action: links, focus rings and the primary hover state. Never used for status. */
+  --color-indigo-50: #eef3ff;
+  --color-indigo-100: #dce6ff;
+  --color-indigo-500: #3e63e0;
+  --color-indigo-600: #274bcc;
+  --color-indigo-700: #1d3ba8;
+
+  /* Service status. Always paired with a text label; never the only signal. */
+  --color-status-operational: #18794a;
+  --color-status-degraded: #b57f00;
+  --color-status-partial: #c4540c;
+  --color-status-major: #c62828;
+  --color-status-maintenance: #5f6f9c;
+
+  /* Incident severity fills. SEV3 uses dark text; the others use white. */
+  --color-sev-1: #c62828;
+  --color-sev-2: #b8470a;
+  --color-sev-3: #f0b429;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-slate-100);
+    color: var(--color-slate-900);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-indigo-600);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  /* The display voice: a condensed cut of the same family, used for the page's one big statement
+     and for severity marks. Everything else stays at normal width. */
+  .type-display {
+    font-stretch: 78%;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.02;
+  }
+
+  .type-mark {
+    font-stretch: 80%;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer utilities {
+  /* The service health strip fills in once when the dashboard first loads. */
+  @keyframes strip-fill {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  .strip-fill {
+    transform-origin: left center;
+    animation: strip-fill 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .strip-fill {
+      animation: none;
+    }
+  }
+}
 
 html,
 body,
 #root {
   min-height: 100%;
-}
-
-body {
-  margin: 0;
 }

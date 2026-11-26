@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { apiRequest } from '../lib/api-client'
 import { useAuth } from '../lib/use-auth'
+import { SeverityMark } from '../components/ui/SeverityMark'
 
 type Severity = 'SEV1' | 'SEV2' | 'SEV3' | 'SEV4'
 type IncidentStatus = 'investigating' | 'identified' | 'monitoring' | 'resolved'
@@ -24,13 +25,6 @@ type Incident = {
 
 const severities: Severity[] = ['SEV1', 'SEV2', 'SEV3', 'SEV4']
 const lifecycle: IncidentStatus[] = ['investigating', 'identified', 'monitoring', 'resolved']
-
-const severityStyles: Record<Severity, string> = {
-  SEV1: 'bg-red-100 text-red-800',
-  SEV2: 'bg-orange-100 text-orange-800',
-  SEV3: 'bg-amber-100 text-amber-800',
-  SEV4: 'bg-slate-100 text-slate-700',
-}
 
 function IncidentsPage() {
   const { organization, role } = useAuth()
@@ -232,7 +226,7 @@ function IncidentsPage() {
                 disabled={saving || !serviceId || !title.trim()}
                 className="mt-4 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
               >
-                {saving ? 'Creatingâ€¦' : 'Create incident'}
+                {saving ? 'Creating…' : 'Create incident'}
               </button>
             </>
           )}
@@ -286,7 +280,7 @@ function IncidentsPage() {
 
         {loading ? (
           <p role="status" className="p-6 text-sm text-slate-500">
-            Loading incidentsâ€¦
+            Loading incidents…
           </p>
         ) : incidents.length === 0 ? (
           <p className="p-6 text-sm text-slate-500">No incidents match the current filters.</p>
@@ -298,16 +292,14 @@ function IncidentsPage() {
                   <div className="min-w-0">
                     <h4 className="font-semibold text-slate-900">{incident.title}</h4>
                     <p className="mt-1 text-sm text-slate-500">
-                      {serviceName(incident.service_id)} Â· Assigned to{' '}
-                      {assigneeName(incident.assignee_id)}
+                      {serviceName(incident.service_id)} ·{' '}
+                      {incident.assignee_id
+                        ? `Assigned to ${assigneeName(incident.assignee_id)}`
+                        : 'Unassigned'}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span
-                      className={`rounded-full px-3 py-1 text-xs font-semibold ${severityStyles[incident.severity]}`}
-                    >
-                      {incident.severity}
-                    </span>
+                    <SeverityMark severity={incident.severity} />
                     <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium capitalize text-slate-700">
                       {incident.status}
                     </span>
